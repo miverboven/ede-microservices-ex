@@ -15,6 +15,7 @@ jobs:
         with:
           java-version: 17
           cache: maven
+          distribution: adopt
       
       - name: Build, test and package project
         working-directory: ./product-service
@@ -40,6 +41,7 @@ jobs:
         with:
           java-version: 17
           cache: maven
+          distribution: adopt
 
       - name: Build, test and package project
         working-directory: ./inventory-service
@@ -65,6 +67,7 @@ jobs:
         with:
           java-version: 17
           cache: maven
+          distribution: adopt
         
       - name: Build, test and package project
         working-directory: ./order-service
