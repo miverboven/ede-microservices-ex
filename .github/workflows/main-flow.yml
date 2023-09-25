@@ -5,7 +5,7 @@ on: push
 jobs:
   productservice:
     runs-on: ubuntu-latest
-    name: Java 17 build, test, deliver book-info-service container
+    name: Java 17 build, test, deliver product-service container
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USER }}/product-service:latest
   inventoryservice:
     runs-on: ubuntu-latest
-    name: Java 17 build, test, deliver review-service container
+    name: Java 17 build, test, deliver inventory-service container
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -57,7 +57,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USER }}/inventory-service:latest
   orderservice:
     runs-on: ubuntu-latest
-    name: Java 17 build, test, deliver brank-edge-service container
+    name: Java 17 build, test, deliver order-service container
     steps:
       - name: Check out repository
         uses: actions/checkout@v3

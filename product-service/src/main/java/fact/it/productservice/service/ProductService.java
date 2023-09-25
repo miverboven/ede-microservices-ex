@@ -23,7 +23,7 @@ public class ProductService {
             Product product = Product.builder()
                     .skuCode("tube6in")
                     .name("Stainless steel acid-resistant seamless tube OD 6 mm x 1 mm steel grade 316 / 316L 180cm")
-                    .price(BigDecimal.valueOf(5.50))
+                    .price(BigDecimal.valueOf(7.50))
                     .description("")
                     .build();
 
