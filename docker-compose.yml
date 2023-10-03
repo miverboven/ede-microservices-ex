@@ -68,6 +68,20 @@ services:
    MYSQL_DB_HOST: mysql-order
    MYSQL_DB_PORT: 3306
 
+ api-gateway:
+   depends_on:
+     - product-service
+     - order-service
+   image: miverboven/ede-api-gateway
+   ports:
+     - 8083:8083
+   links:
+     - product-service
+     - order-service
+   environment:
+     PRODUCT_SERVICE_BASEURL: product-service:8080
+     INVENTORY_INFO_SERVICE_BASEURL: order-service:8081
+
 volumes:
  mongodb_product_data:
  mysql_inventory_data:
