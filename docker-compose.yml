@@ -80,7 +80,7 @@ services:
      - order-service
    environment:
      PRODUCT_SERVICE_BASEURL: product-service:8080
-     INVENTORY_INFO_SERVICE_BASEURL: order-service:8081
+     ORDER_INFO_SERVICE_BASEURL: order-service:8081
 
 volumes:
  mongodb_product_data:
