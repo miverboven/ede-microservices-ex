@@ -1,0 +1,34 @@
+server:
+  port: 8083
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
+    reactor.netty: TRACE
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/products
+            - Method=POST
+          filters:
+            - SetPath=/api/product
+        - id: product-service-all
+          uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/products
+            - Method=GET
+          filters:
+            - SetPath=/api/product/all
+        - id: order-service
+          uri: http://${ORDER_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/orders
+          filters:
+            - SetPath=/api/order
