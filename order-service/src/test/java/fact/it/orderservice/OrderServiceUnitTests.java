@@ -20,10 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceUnitTests {
@@ -53,7 +52,7 @@ public class OrderServiceUnitTests {
     }
 
     @Test
-    public void testPlaceOrder() {
+    public void testPlaceOrder_Success() {
         // Arrange
 
         String skuCode = "sku1";
@@ -106,6 +105,63 @@ public class OrderServiceUnitTests {
 
         // Assert
         assertTrue(result);
+
+        verify(orderRepository, times(1)).save(any(Order.class));
+    }
+
+    @Test
+    public void testPlaceOrder_FailureIfOutOfStock() {
+        // Arrange
+
+        String skuCode = "sku1";
+        Integer quantity = 2;
+        BigDecimal price = BigDecimal.valueOf(100);
+        String description = "Test Description";
+        String name = "Test Name";
+
+        OrderRequest orderRequest = new OrderRequest();
+        // populate orderRequest with test data
+        OrderLineItemDto orderLineItemDto = new OrderLineItemDto();
+        orderLineItemDto.setId(1L);
+        orderLineItemDto.setSkuCode(skuCode);
+        orderLineItemDto.setQuantity(quantity);
+        orderRequest.setOrderLineItemsDtoList(Arrays.asList(orderLineItemDto));
+
+        InventoryResponse inventoryResponse = new InventoryResponse();
+        // populate inventoryResponse with test data
+        inventoryResponse.setSkuCode(skuCode);
+        inventoryResponse.setInStock(false);
+
+        ProductResponse productResponse = new ProductResponse();
+        // populate productResponse with test data
+        productResponse.setId("1");
+        productResponse.setSkuCode(skuCode);
+        productResponse.setName(name);
+        productResponse.setDescription(description);
+        productResponse.setPrice(price);
+
+        Order order = new Order();
+        order.setId(1L);
+        order.setOrderNumber("1");
+        OrderLineItem orderLineItem = new OrderLineItem();
+        orderLineItem.setId(1L);
+        orderLineItem.setSkuCode(skuCode);
+        orderLineItem.setQuantity(quantity);
+        orderLineItem.setPrice(price);
+        order.setOrderLineItemsList(Arrays.asList(orderLineItem));
+
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(anyString(),  any(Function.class))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(InventoryResponse[].class)).thenReturn(Mono.just(new InventoryResponse[]{inventoryResponse}));
+
+        // Act
+        boolean result = orderService.placeOrder(orderRequest);
+
+        // Assert
+        assertFalse(false);
+
+        verify(orderRepository, times(0)).save(order);
     }
 
     @Test
@@ -128,6 +184,7 @@ public class OrderServiceUnitTests {
 
         // Assert
         assertEquals(2, result.size());
-        // Add more assertions to verify the contents of the result
+
+        verify(orderRepository, times(1)).findAll();
     }
 }
